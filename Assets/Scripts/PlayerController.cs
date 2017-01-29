@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 
 public class PlayerController : MonoBehaviour {
 
@@ -11,29 +13,28 @@ public class PlayerController : MonoBehaviour {
 
   void Start() {
     body = GetComponent<Rigidbody2D>();
+
+    Inputs inputs = Inputs.Instance;
+
+    // The observable
+    inputs.Movement
+      // Only interested in when there are values
+      .Where(v => v != Vector2.zero)
+      // Observe those values
+      .Subscribe(movement => {
+        body.AddForce(movement * speed);
+      })
+      // Stop observing when this game object is destroyed (keeps memory clean)
+      .AddTo(this);
+
+    inputs.Firing
+      .Where(v => v == true)
+      .Subscribe(_ => {
+        Vector3 fireFrom = transform.Find("Gun Forward").position;
+        Rigidbody2D newBullet = (Rigidbody2D)Instantiate(bullet, fireFrom, Quaternion.identity);
+        newBullet.velocity = new Vector3(10, 0, 0);
+      })
+      .AddTo(this);
   }
 
-  void movePlayer() {
-    float moveHorizontal = Input.GetAxis("Horizontal");
-    float moveVertical = Input.GetAxis("Vertical");
-
-    Vector2 movement = new Vector2(moveHorizontal, moveVertical);
-
-    body.AddForce(movement * speed);
-  }
-
-  void fireBullet() {
-    Vector3 fireFrom = transform.Find("Gun Forward").position;
-    Rigidbody2D newBullet = (Rigidbody2D)Instantiate(bullet, fireFrom, Quaternion.identity);
-    newBullet.velocity = new Vector3(10, 0, 0);
-  }
-
-  void FixedUpdate() {
-
-    movePlayer();
-
-    if (Input.GetButtonDown("Fire1")) {
-      fireBullet();
-    }
-  }
 }
