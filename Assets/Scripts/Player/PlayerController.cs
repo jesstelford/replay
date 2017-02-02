@@ -10,11 +10,11 @@ public class PlayerController : MonoBehaviour {
   public float speed;
   public Rigidbody2D bullet;
 
-  public IObservable<Vector2> Move { get; private set; }
+  public IObservable<Vector3> Move { get; private set; }
 
   private Rigidbody2D body;
 
-  private Int playerId;
+  private int playerId;
 
   // Called before Start(), and before any game logic executes
   private void Awake () {
@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour {
       .Select(_ => {
         return transform.position;
       })
-      .Where(positionNow => positionNow != state.players[this.playerId].position);
+      .Where(positionNow => positionNow != StateManager.State.players[this.playerId].position);
   }
 
   void Start() {
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour {
 
     this.Move
       .Subscribe(position => {
-        StateManager.Store.dispatch(Inputs.ActionCreator.Move(this.playerId, position));
+        StateManager.Store.Dispatch(Inputs.ActionCreator.Move(this.playerId, position));
       });
   }
 

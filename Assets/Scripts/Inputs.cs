@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Unidux;
 
-public class Inputs : SingletonMonoBehaviour<Inputs> {
+
+public sealed class Inputs : SingletonMonoBehaviour<Inputs> {
 
   public IObservable<Vector2> Movement { get; private set; }
   public IObservable<bool> Firing { get; private set; }
 
-  private enum ActionTypes {
+  public enum ActionTypes {
     MOVE,
     FIRE
   }
 
   public static class ActionCreator {
 
-    public static Action Move(Int playerId, Vector3 actionData) {
+    public static Action Move(int playerId, Vector3 actionData) {
       return new Action() {
         type = Inputs.ActionTypes.MOVE,
         data = actionData,
@@ -31,9 +33,10 @@ public class Inputs : SingletonMonoBehaviour<Inputs> {
     }
   }
 
-  private class Action {
+  public class Action {
     public ActionTypes type;
-    public Vector2 data;
+    public Vector3 data;
+    public int id;
   }
 
   // reducers handle state changes
@@ -47,28 +50,26 @@ public class Inputs : SingletonMonoBehaviour<Inputs> {
         newState = state.Clone();
         newState.players[action.id].position = action.data;
         return newState;
-        break;
       case Inputs.ActionTypes.FIRE:
         newState = state.Clone();
         // TODO
         return newState;
-        break;
     }
 
     return state;
   }
 
   // Called before Start(), and before any game logic executes
-  private void Awake () {
+  new private void Awake () {
 
-    this.Movement = this.FixedUpdateAsObservable()
+    Instance.Movement = Instance.FixedUpdateAsObservable()
       .Select(_ => {
         var x = Input.GetAxis("Horizontal");
         var y = Input.GetAxis("Vertical");
         return new Vector2(x, y).normalized;
       });
 
-    this.Firing = this.FixedUpdateAsObservable()
+    Instance.Firing = Instance.FixedUpdateAsObservable()
       .Select(_ => {
         return Input.GetButtonDown("Fire1");
       });

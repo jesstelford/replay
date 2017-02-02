@@ -811,6 +811,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1092002829}
   - component: {fileID: 1092002830}
+  - component: {fileID: 1092002831}
   m_Layer: 0
   m_Name: Renderer
   m_TagString: Untagged
@@ -866,6 +867,17 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!114 &1092002831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1092002828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b736d62d4b514f879fc34dccc49b482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1193973623 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224769379862512420, guid: 8549bb0004f7c45ecabe53fef4cfb92b,
@@ -944,6 +956,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1407943417}
   - component: {fileID: 1407943416}
+  - component: {fileID: 1407943418}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -975,6 +988,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1407943418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1407943415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0d58cc91769474f8ab3a14ef938a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1557803254
 Prefab:
   m_ObjectHideFlags: 0
