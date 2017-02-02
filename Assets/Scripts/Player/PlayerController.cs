@@ -3,13 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Unidux;
 
 public class PlayerController : MonoBehaviour {
 
   public float speed;
   public Rigidbody2D bullet;
 
+  public IObservable<Vector2> Move { get; private set; }
+
   private Rigidbody2D body;
+
+  private Int playerId;
+
+  // Called before Start(), and before any game logic executes
+  private void Awake () {
+
+    // TODO: Don't hard code this
+    this.playerId = 1;
+
+    this.Move = this.FixedUpdateAsObservable()
+      .Select(_ => {
+        return transform.position;
+      })
+      .Where(positionNow => positionNow != state.players[this.playerId].position);
+  }
 
   void Start() {
     body = GetComponent<Rigidbody2D>();
@@ -30,11 +48,18 @@ public class PlayerController : MonoBehaviour {
     inputs.Firing
       .Where(v => v == true)
       .Subscribe(_ => {
+        // TODO: Fire a redux action creating the new bullet which will have its
+        // own Controller / Renderer to handle physics and display
         Vector3 fireFrom = transform.Find("Gun Forward").position;
         Rigidbody2D newBullet = (Rigidbody2D)Instantiate(bullet, fireFrom, Quaternion.identity);
         newBullet.velocity = new Vector3(10, 0, 0);
       })
       .AddTo(this);
+
+    this.Move
+      .Subscribe(position => {
+        StateManager.Store.dispatch(Inputs.ActionCreator.Move(this.playerId, position));
+      });
   }
 
 }
