@@ -7,9 +7,12 @@ using Unidux;
 
 public class EnemyRenderer : MonoBehaviour {
 
+  // TODO: Don't hard code this here
+  private int enemyId = 0;
+
   public void Awake() {
     StateManager.Store.AddRenderer(state => {
-      Debug.Log("Enemy Renderer");
+      transform.position = state.enemies[this.enemyId].position;
     });
   }
 }

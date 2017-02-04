@@ -8,17 +8,27 @@ using Unidux;
 public class State : StateBase<State> {
 
   public Dictionary<int, PlayerState> players;
+  public Dictionary<int, EnemyState> enemies;
 
   [Serializable]
   public class PlayerState {
     public SerializableVector3 position;
   }
 
+  [Serializable]
+  public class EnemyState {
+    public SerializableVector3 position;
+  }
+
   public State() {
     this.players = new Dictionary<int, PlayerState>();
+    this.enemies = new Dictionary<int, EnemyState>();
 
     // Setup initial state
     this.players[1] = new PlayerState {
+      position = new Vector3(0, 0, 0)
+    };
+    this.enemies[0] = new EnemyState {
       position = new Vector3(0, 0, 0)
     };
   }

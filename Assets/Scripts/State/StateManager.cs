@@ -38,5 +38,6 @@ public sealed partial class StateManager : SingletonMonoBehaviour<StateManager> 
 public sealed partial class StateManager {
   partial void CombineReducers(Store<State> store) {
     store.AddReducer<Inputs.Action>(Inputs.Reducer);
+    store.AddReducer<Enemy.Action>(Enemy.Reducer);
   }
 }
