@@ -5,6 +5,62 @@ using UniRx;
 using UniRx.Triggers;
 using Unidux;
 
+public class PlayerController<ParentState> : MonoBehaviour {
+
+  /*** State ***/
+  [Serializable]
+  public class State {
+    public SerializableVector3 position;
+
+    public State State(State oldState) {
+      // Make a copy
+      this.position = new SerializableVector3(oldState.position);
+    }
+  }
+
+  /*** Actions ***/
+  public struct MoveAction { }
+
+  /*** Action Creators ***/
+  public static class ActionCreator {
+    public static MoveAction Move() {
+      return new MoveAction;
+    }
+  }
+
+  /*** Reducers ***/
+  public Reducto.SimpleReducer<ParentState> reducer() {
+    return new Reducto.SimpleReducer<State>()
+      .When<MoveAction>((state, action) => {
+
+        // TODO: Only clone / update if values are different
+
+        // Clone current state object
+        State newState = new State(state);
+
+        // 2. Update with latest values
+        newState.position = action.position;
+
+        // 3. Return new state copy
+        return newState;
+      });
+  }
+
+  /*** Subscriber ***/
+  public ?? subscriber() {
+    // TODO
+  }
+}
+
+
+
+
+
+
+
+
+
+
 public class PlayerController : MonoBehaviour {
 
   public float speed;

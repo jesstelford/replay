@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
-using Unidux;
+using Reducto;
 
 public sealed partial class StateManager : SingletonMonoBehaviour<StateManager> {
 
