@@ -12,6 +12,10 @@ public class Game : MonoBehaviour {
 
   private Store<State> store;
 
+  void register<Type>(Type instance) {
+    // TODO
+  }
+
   // Setup before starting
   void Awake() {
 

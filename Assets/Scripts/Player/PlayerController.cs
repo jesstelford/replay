@@ -5,11 +5,11 @@ using UniRx;
 using UniRx.Triggers;
 using Unidux;
 
-public class PlayerController<ParentState> : MonoBehaviour {
+public class PlayerController : MonoBehaviour {
 
   /*** State ***/
   [Serializable]
-  public class State {
+  private class State {
     public SerializableVector3 position;
 
     public State State(State oldState) {
@@ -19,36 +19,41 @@ public class PlayerController<ParentState> : MonoBehaviour {
   }
 
   /*** Actions ***/
-  public struct MoveAction { }
+  public struct MoveAction {
+    public SerializableVector3 position;
+  }
 
   /*** Action Creators ***/
   public static class ActionCreator {
-    public static MoveAction Move() {
-      return new MoveAction;
+
+    public static MoveAction Move(SerializableVector3 newPosition) {
+      return new MoveAction {
+        position = newPosition
+      }
     }
+
   }
 
   /*** Reducers ***/
-  public Reducto.SimpleReducer<ParentState> reducer() {
+  public Reducto.SimpleReducer<State> reducer() {
     return new Reducto.SimpleReducer<State>()
       .When<MoveAction>((state, action) => {
-
-        // TODO: Only clone / update if values are different
 
         // Clone current state object
         State newState = new State(state);
 
-        // 2. Update with latest values
+        // Update with latest values
         newState.position = action.position;
 
-        // 3. Return new state copy
+        // Return new state copy
         return newState;
       });
   }
 
   /*** Subscriber ***/
-  public ?? subscriber() {
-    // TODO
+  public void subscriber(State state) {
+    Debug.Log("State changed");
+    Debug.Log(state);
   }
 }
 
