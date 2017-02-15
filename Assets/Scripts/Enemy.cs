@@ -7,6 +7,7 @@ using Unidux;
 
 public sealed class Enemy : SingletonMonoBehaviour<Enemy> {
 
+  /*
   public IObservable<Vector2> Movement { get; private set; }
   public IObservable<bool> Firing { get; private set; }
 
@@ -57,4 +58,5 @@ public sealed class Enemy : SingletonMonoBehaviour<Enemy> {
 
     return state;
   }
+  */
 }

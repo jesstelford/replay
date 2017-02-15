@@ -8,15 +8,10 @@ using Unidux;
 public class PlayerRenderer : MonoBehaviour {
 
   public void Awake() {
-
-    StateManager.Store.AddRenderer(state => {
-      transform.position = state.players[this.playerId].position;
-    });
   }
 
-  /*** Subscriber ***/
-  public void subscriber(PlayerController.State state) {
-    transform.position = state.players[this.playerId].position;
+  public void setPosition(Vector3 position) {
+    this.transform.position = position;
   }
 
 }
