@@ -3,35 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using Reducto;
 
-public class Game : MonoBehaviour {
+public class Game : SingletonMonoBehaviour<Game> {
+
+  public gameObject playerObject;
 
   [Serializable]
-  public struct State {
+  private struct State {
     public PlayerController.State player;
   }
 
   private Store<State> store;
 
-  void register<Type>(Type instance) {
-    // TODO
-  }
-
   // Setup before starting
   void Awake() {
+
+    PlayerController playerScript = (PlayerController)playerObject.GetComponent(typeof(PlayerController));
 
     var rootReducer = new CompositeReducer<State>()
       .Part(
         state => state.player
-        PlayerController.reducer(),
+        playerScript.reducer(),
       );
 
     this.store = new Store<State>(rootReducer);
 
-    if (PlayerController.subscriber) {
+    if (playerScript.subscriber) {
       var unusb = this.store.Subscribe(state => {
-        PlayerController.subscriber(state.player);
+        playerScript.subscriber(state.player);
       })
     }
+
+    if (playerScript.getStateFactory) {
+      playerScript.getStateFactory(() => store.GetState().player);
+    }
+  }
+
+  Store<State> getStore() {
+    return this.store;
   }
 
   // Use this for initialization
