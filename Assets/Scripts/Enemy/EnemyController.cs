@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Unidux;
 
 public class EnemyController : MonoBehaviour {
-
+/*
   public Rigidbody2D bullet;
   public float amplitude;
   public float hertz;
@@ -28,5 +27,5 @@ public class EnemyController : MonoBehaviour {
 
     StateManager.Store.Dispatch(Enemy.ActionCreator.Move(this.enemyId, transform.position));
   }
-
+*/
 }

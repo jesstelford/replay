@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Unidux;
 
 public sealed class Enemy : SingletonMonoBehaviour<Enemy> {
 

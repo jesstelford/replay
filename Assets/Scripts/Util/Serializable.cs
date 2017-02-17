@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 /// <summary>
 /// Since unity doesn't flag the Vector3 as serializable, we
 /// need to create our own version. This one will automatically convert

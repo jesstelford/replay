@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Unidux;
 
 public class PlayerInput : MonoBehaviour {
 
@@ -21,7 +20,7 @@ public class PlayerInput : MonoBehaviour {
       .Select(_ => {
         return transform.position;
       })
-      .Where(positionNow => positionNow != this.getState().position);
+      .Where(positionNow => positionNow != transform.parent.gameObject.GetComponent<PlayerController>().getState().position);
 
   }
 
@@ -54,7 +53,7 @@ public class PlayerInput : MonoBehaviour {
 
     this.Move
       .Subscribe(position => {
-        transform.parent.gameObject.GetComponent<PlayerController>().ActionCreator.Move(position);
+        PlayerController.ActionCreator.Move(position);
         //StateManager.Store.Dispatch(Inputs.ActionCreator.Move(this.playerId, position));
       });
   }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,40 +6,37 @@ using Reducto;
 
 public class Game : SingletonMonoBehaviour<Game> {
 
-  public gameObject playerObject;
+  public GameObject playerObject;
 
   [Serializable]
-  private struct State {
+  public struct State {
     public PlayerController.State player;
   }
 
   private Store<State> store;
 
   // Setup before starting
-  void Awake() {
+  override protected void Awake() {
+    CheckInstance(); // Singelton stuff
 
     PlayerController playerScript = (PlayerController)playerObject.GetComponent(typeof(PlayerController));
 
     var rootReducer = new CompositeReducer<State>()
       .Part(
-        state => state.player
-        playerScript.reducer(),
+        state => state.player,
+        playerScript.reducer()
       );
 
     this.store = new Store<State>(rootReducer);
 
-    if (playerScript.subscriber) {
-      var unusb = this.store.Subscribe(state => {
-        playerScript.subscriber(state.player);
-      })
-    }
+    this.store.Subscribe(state => {
+      playerScript.subscriber(state.player);
+    });
 
-    if (playerScript.getStateFactory) {
-      playerScript.getStateFactory(() => store.GetState().player);
-    }
+    playerScript.getStateFactory(() => store.GetState().player);
   }
 
-  Store<State> getStore() {
+  public Store<State> getStore() {
     return this.store;
   }
 

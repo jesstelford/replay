@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Unidux;
 
 public class PlayerController : MonoBehaviour {
 
@@ -18,9 +18,9 @@ public class PlayerController : MonoBehaviour {
   public class State {
     public SerializableVector3 position;
 
-    public State State(State oldState) {
+    public State(State oldState) {
       // Make a copy
-      this.position = new SerializableVector3(oldState.position);
+      this.position = oldState.position;
     }
   }
 
@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour {
   /*** Action Creators ***/
   public static class ActionCreator {
 
-    public static MoveAction Move(SerializableVector3 newPosition) {
+    public static void Move(SerializableVector3 newPosition) {
       Game.Instance.getStore().Dispatch(
         new MoveAction {
           position = newPosition

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Unidux;
 
 public class EnemyRenderer : MonoBehaviour {
 
+  /*
   // TODO: Don't hard code this here
   private int enemyId = 0;
 
@@ -15,4 +15,5 @@ public class EnemyRenderer : MonoBehaviour {
       transform.position = state.enemies[this.enemyId].position;
     });
   }
+  */
 }
