@@ -21,11 +21,14 @@ public class Game : SingletonMonoBehaviour<Game> {
 
     PlayerController playerScript = (PlayerController)playerObject.GetComponent(typeof(PlayerController));
 
-    var rootReducer = new CompositeReducer<State>()
-      .Part(
-        state => state.player,
-        playerScript.reducer()
-      );
+    var rootReducer = new CompositeReducer<State>(() => {
+      // Initial state (note we let the child reducers handle initializing their
+      // own slices of state)
+      return new State();
+    }).Part(
+      state => state.player,
+      playerScript.reducer()
+    );
 
     this.store = new Store<State>(rootReducer);
 

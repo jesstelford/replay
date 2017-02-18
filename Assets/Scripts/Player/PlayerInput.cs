@@ -16,11 +16,11 @@ public class PlayerInput : MonoBehaviour {
   // Called before Start(), and before any game logic executes
   private void Awake () {
 
+    PlayerController playerScript = transform.parent.gameObject.GetComponent<PlayerController>();
+
     this.Move = this.FixedUpdateAsObservable()
-      .Select(_ => {
-        return transform.position;
-      })
-      .Where(positionNow => positionNow != transform.parent.gameObject.GetComponent<PlayerController>().getState().position);
+      .Select(_ => transform.position)
+      .Where(positionNow => positionNow != playerScript.getState().position);
 
   }
 

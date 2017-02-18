@@ -18,6 +18,10 @@ public class PlayerController : MonoBehaviour {
   public class State {
     public SerializableVector3 position;
 
+    public State() {
+      this.position = new SerializableVector3();
+    }
+
     public State(State oldState) {
       // Make a copy
       this.position = oldState.position;
@@ -44,18 +48,20 @@ public class PlayerController : MonoBehaviour {
 
   /*** Reducers ***/
   public Reducto.SimpleReducer<State> reducer() {
-    return new Reducto.SimpleReducer<State>()
-      .When<MoveAction>((state, action) => {
+    return new Reducto.SimpleReducer<State>(() => {
+      // Initial state
+      return new State();
+    }).When<MoveAction>((state, action) => {
 
-        // Clone current state object
-        State newState = new State(state);
+      // Clone current state object
+      State newState = new State(state);
 
-        // Update with latest values
-        newState.position = action.position;
+      // Update with latest values
+      newState.position = action.position;
 
-        // Return new state copy
-        return newState;
-      });
+      // Return new state copy
+      return newState;
+    });
   }
 
   /*** Subscriber ***/
