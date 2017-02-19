@@ -7,11 +7,16 @@ using UniRx.Triggers;
 
 public class PlayerController : MonoBehaviour {
 
-  private PlayerRenderer rendererChild;
+  public float speed;
+  public Rigidbody2D bullet;
 
-  private void Start() {
-    this.rendererChild = this.GetComponentsInChildren<PlayerRenderer>()[0];
-  }
+  public IObservable<Vector3> Move { get; private set; }
+
+
+  private Transform rendererChild;
+  private Transform colliderChild;
+
+  private Rigidbody2D body;
 
   /*** State ***/
   [Serializable]
@@ -66,8 +71,7 @@ public class PlayerController : MonoBehaviour {
 
   /*** Subscriber ***/
   public void subscriber(State state) {
-    // TODO: Compose the state slicer & subscriber to pass this data straight down
-    rendererChild.setPosition(state.position);
+    rendererChild.position = state.position;
   }
 
   /*** Getting state ***/
@@ -78,5 +82,52 @@ public class PlayerController : MonoBehaviour {
   // This is set in `getStateFactory` for later use to grab a slice of state
   // we're interested in
   public Func<State> getState;
+
+  /*** Lifecycle methods ***/
+  // Called before Start(), and before any game logic executes
+  private void Awake () {
+    this.rendererChild = this.transform.Find("Renderer");
+    this.colliderChild = this.transform.Find("Collider");
+
+    this.Move = this.FixedUpdateAsObservable()
+      .Select(_ => colliderChild.position)
+      .Where(positionNow => positionNow != this.getState().position);
+  }
+
+  private void Start() {
+
+    this.body = this.colliderChild.GetComponent<Rigidbody2D>();
+
+    Inputs inputs = Inputs.Instance;
+
+    // The observable
+    inputs.Movement
+      // Only interested in when there are values
+      .Where(v => v != Vector2.zero)
+      // Observe those values
+      .Subscribe(movement => {
+        this.body.AddForce(movement * speed);
+      })
+      // Stop observing when this game object is destroyed (keeps memory clean)
+      .AddTo(this);
+
+    inputs.Firing
+      .Where(v => v == true)
+      .Subscribe(_ => {
+        // TODO: Fire a redux action creating the new bullet which will have its
+        // own Controller / Renderer to handle physics and display
+        Vector3 fireFrom = this.colliderChild.Find("Gun Forward").position;
+        Rigidbody2D newBullet = (Rigidbody2D)Instantiate(bullet, fireFrom, Quaternion.identity);
+        newBullet.velocity = new Vector3(10, 0, 0);
+      })
+      .AddTo(this);
+
+    this.Move
+      .Subscribe(position => {
+        ActionCreator.Move(position);
+        //StateManager.Store.Dispatch(Inputs.ActionCreator.Move(this.playerId, position));
+      });
+  }
+
 }
 
